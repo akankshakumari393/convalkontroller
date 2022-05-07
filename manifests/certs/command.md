@@ -1,0 +1,1 @@
+openssl req -new -x509 -subj "/CN=convalkon.default.svc"  -addext "subjectAltName = DNS:convalkon.default.svc" -nodes -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365
