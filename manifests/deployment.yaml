@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: convalkontroller
+  name: convalkontroller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: convalkontroller
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: convalkontroller
+    spec:
+      containers:
+      - image: akankshakumari393/convalkontroller:0.0.1
+        name: convalkontroller
+        imagePullPolicy: Always
+        resources: {}
+        args:
+        - --tls-cert-file=/var/run/webhook/serving-cert/tls.crt
+        - --tls-private-key-file=/var/run/webhook/serving-cert/tls.key
+        - --v=4
+        volumeMounts:
+          - mountPath: /var/run/webhook/serving-cert
+            name: serving-cert 
+      volumes:
+        - name: serving-cert
+          secret:
+            secretName: certs
+status: {}

@@ -1,0 +1,1 @@
+kubectl create clusterrolebinding convalkon-role-binding --clusterrole=convalkon-role --user=system:serviceaccount:default:default
