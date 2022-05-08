@@ -1,1 +1,0 @@
-kubectl create clusterrole convalkon-role --verb=get --resource=deployments,configmaps
