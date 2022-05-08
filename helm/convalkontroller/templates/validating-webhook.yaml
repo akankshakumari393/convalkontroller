@@ -28,7 +28,9 @@ data:
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: "depkon.akankshakumari393.dev"
+  labels:
+    {{- include "convalkontroller.labels" . | nindent 4 }}
+  name: {{ template "convalkontroller.fullname" . }}-webhook-controller
 webhooks:
 - name: "depkon.akankshakumari393.dev"
   rules:
@@ -42,6 +44,7 @@ webhooks:
       namespace: {{ .Release.Namespace }}
       name: {{ include "convalkontroller.fullname" . }}
       port: {{ .Values.service.port }}
+      path: "/validate/v1alpha1/depkon"
     caBundle: {{ b64enc $ca.Cert }}
   admissionReviewVersions: ["v1", "v1beta1"]
   sideEffects: None

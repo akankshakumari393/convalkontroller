@@ -74,7 +74,7 @@ func main() {
 	stopCh := server.SetupSignalHandler()
 	// create new http handler
 	mux := http.NewServeMux()
-	mux.Handle("/", http.HandlerFunc(serveConfigValidation))
+	mux.Handle("/validate/v1alpha1/depkon", http.HandlerFunc(serveConfigValidation))
 
 	// register validation function to http handler
 
@@ -120,7 +120,7 @@ func serveConfigValidation(w http.ResponseWriter, r *http.Request) {
 			Allowed: false,
 			Result: &v1.Status{
 				Status:  "Failure",
-				Message: fmt.Sprintf("The specified resource %s is not valid", depkon.Name),
+				Message: fmt.Sprintf("The specified resource %s is not valid : %s", depkon.Name, err.Error()),
 				Reason:  v1.StatusReason(err.Error()),
 			},
 		}
