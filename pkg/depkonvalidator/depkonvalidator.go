@@ -14,10 +14,16 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func CheckIfDepkonValid(depkon depkonv1alpha1.Depkon) (bool, error) {
+var kubeconfig *string
+
+// Initialize flag only once
+func init() {
 	homeDir := os.Getenv("HOME")
 	kubeconfigFile := homeDir + "/.kube/config"
-	kubeconfig := flag.String("kubeconfig", kubeconfigFile, "Kubeconfig File location")
+	kubeconfig = flag.String("kubeconfig", kubeconfigFile, "Kubeconfig File location")
+}
+
+func CheckIfDepkonValid(depkon depkonv1alpha1.Depkon) (bool, error) {
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
 		// handle error
