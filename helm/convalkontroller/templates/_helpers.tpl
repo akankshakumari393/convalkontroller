@@ -60,3 +60,14 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+# {{/*
+# Generate certificates for convalkontroller 
+# */}}
+# {{- define "convalkontroller-certs" -}}
+# {{- $altNames := list ( printf "%s.%s" (include "convalkontroller.name" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "convalkontroller.name" .) .Release.Namespace ) -}}
+# {{- $ca := genCA "convalkontroller-ca" 365 -}}
+# {{- $cert := genSignedCert ( include "convalkontroller.name" . ) nil $altNames 365 $ca -}}
+# # tls.crt: {{ $cert.Cert | b64enc }}
+# # tls.key: {{ $cert.Key | b64enc }}
+# {{- end -}}
