@@ -33,20 +33,28 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+          - --tls-cert-file=/var/run/certs/tls.crt
+          - --tls-private-key-file=/var/run/certs/tls.key         
+          - --v=4
           ports:
-            - name: http
-              containerPort: 80
+            - name: https
+              containerPort: 8443
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: https
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: https
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: certs
+              mountPath: /var/run/certs
+              readOnly: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -59,3 +67,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      - name: certs
+        secret:
+          secretName: {{ template "convalkontroller.name" . }}-certs
